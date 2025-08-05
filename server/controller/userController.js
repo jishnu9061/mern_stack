@@ -61,3 +61,18 @@ export const updateUserById = async (req, res) => {
     return errorResponse(res, "Error updating user", error.message);
   }
 };
+
+export const deleteUserById = async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return errorResponse(res, "Invalid user ID", {}, 400);
+    }
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return errorResponse(res, "User not found", {}, 404);
+    }
+    return successResponse(res, "User deleted successfully", deletedUser);
+  } catch (error) {
+    return errorResponse(res, "Error deleting user", error.message);
+  }
+};
