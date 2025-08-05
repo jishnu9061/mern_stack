@@ -1,0 +1,23 @@
+####
+
+npm init
+
+####
+
+npm i dot-env
+
+####
+
+npm i body-parser
+
+####
+
+npm i express
+
+####
+
+npm i mongoose
+
+####
+
+npm i nodemon
