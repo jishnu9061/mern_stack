@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import User from "../model/User.js";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
 
@@ -25,5 +26,17 @@ export const getAllUsers = async (req, res) => {
     return successResponse(res, "Users fetched successfully", users);
   } catch (error) {
     return errorResponse(res, "Error fetching users", error.message);
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const getUser = await User.findById(req.params.id);
+    if (!getUser) {
+      return errorResponse(res, "User not found", {}, 404);
+    }
+    return successResponse(res, "User fetched successfully", getUser);
+  } catch (error) {
+    return errorResponse(res, "Error fetching user by Id", error.message);
   }
 };
