@@ -1,4 +1,4 @@
-import { get } from "mongoose";
+import mongoose from 'mongoose';
 import User from "../model/User.js";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
 
@@ -31,6 +31,9 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return errorResponse(res, "Invalid user ID", {}, 400);
+    }
     const getUser = await User.findById(req.params.id);
     if (!getUser) {
       return errorResponse(res, "User not found", {}, 404);
@@ -38,5 +41,23 @@ export const getUserById = async (req, res) => {
     return successResponse(res, "User fetched successfully", getUser);
   } catch (error) {
     return errorResponse(res, "Error fetching user by Id", error.message);
+  }
+};
+
+export const updateUserById = async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return errorResponse(res, "Invalid user ID", {}, 400);
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedUser) {
+      return errorResponse(res, "User not found", {}, 404);
+    }
+    return successResponse(res, "User updated successfully", updatedUser);
+  } catch (error) {
+    return errorResponse(res, "Error updating user", error.message);
   }
 };
